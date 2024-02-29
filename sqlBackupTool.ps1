@@ -1,42 +1,29 @@
 <#
 .SYNOPSIS
     Name: sqlBackupTool.ps1
-      
-.PARAMETER InitialDirectory
-    This script can be run local filesystem at Workstation.
-      
+            
 .NOTES
-    Updated: xx-xx-2021
+    Updated: xx-xx-20xx
     Release Date: 28-02-2024
     Author: Jordy Scheers     
+    LICENCE: MIT
 
 .NOTES
     ## DEBUG ##
-
-
+    
 ####################################
-
-.EXAMPLE 
-    default 
-     else{
-            #Write-Host "(ERROR) file not found"
-            Write-Logline ("$(get-date) code 404 [ERROR]")
-             $global:returncode = 1;
-        }
 #>
 #-----------------[Date ]-------------------------------------------------------------------------------
-$date = Get-Date -Format "dd-MM-yyyy HH:mm:ss"
-#----------------[Version]-------------------------------------------------------------
-$version = "Version: 1.2.5"
-$space = "---------------------------------"
+$date = Get-Date -Format "dd-MM-yyyy"
 #----------------[ LogFile_Module ]----------------------------------------------------
+try {
 function set-LogLineHeader($string) {
     $global:msg_header = $string
 }
 
 function Set-LogInit($Prefix) {
-    $time = Get-Date -Format "yyyyddMM_HHmmss"
-    $logDir = New-Item -Path "C:\Logs\" -Name "VCB" -ItemType "directory" -Force
+    $time = Get-Date -Format "dd-MM-yyyy HHmmss"
+    $logDir = New-Item -Path "C:\Logs\" -Name "Tools" -ItemType "directory" -Force
     $logFileName = ($Prefix) + $time + ".log"
     $global:logFile = New-Item -Path $logDir -Name $logFileName -ItemType "file" 
     $global:logLines = New-Object System.Collections.ArrayList
@@ -64,11 +51,24 @@ function Write-LogOutput {
         $element | Out-File $global:logFile -Append
     }
 }
+} catch {
+    $msg = "STOP The application has caught an error"
+            Write-LogLine " "
+            Write-LogLine ("## DEBUG ##" + "`n")
+            Write-LogLine ($msg + "`n")
+            Write-LogLine $_.Exception.Message
+            Write-Host "Open Log file to see Error message"
+            Write-LogLine ("`n" + "## DEBUG END ##")
+            Write-logoutput
+    }
+#----------------[Version]-------------------------------------------------------------
+$version = "Version: 1.2.5"
+$space = "---------------------------------"
 #----------------[Pre text]-----------------------------------------------------------------------------
 Write-Host "##########################################################################"
 Write-Host "Welkom bij de SQL Backup Tool $version.                            #"                                 
 Write-Host "Met deze tool kan je gemakkelijk een SQL backup maken en exporteren.     #"
-Write-Host "Default backup path is C:\Backup\VSC-MMX.                                #"
+Write-Host "Kies een bestaand Locatie path voor het exporteren  bijv C:\Temp\        #"
 Write-host "                                                                         #"
 Write-host "                       ##DEBUG##                                         #"
 Write-Host "BUG INFO: De zip functionaliteit functioneert nog niet!                  #"
@@ -77,27 +77,26 @@ Write-host "`n"
 #----------------[ Global Default ]---------------------------------------------------------------------------
 $global:returncode = 0 # VCB 0 = succes , 1 = failed
 #----------------[ Global Vars ]---------------------------------------------------------------------------
-$folderName = Read-Host "Locatie naam"
-$fileName = Read-Host "Datum"
-$global:main = "C:\Backup\VSC-MMX\$folderName"
-$global:sqlBackup = "C:\Backup\VSC-MMX\$folderName\$fileName.bak"
-$global:zipMe = "C:\Backup\VSC-MMX\$folderName.zip"
+$locatie = Read-Host "Locatie path"
+$folderName = Read-Host "Foldername"
+$fileName = Read-Host "Filename"
+$global:main = "$locatie\$folderName"
+$global:sqlBackup = "$locatie\$folderName\$fileName.bak"
+$global:zipMe = "$locatie\$folderName.zip"
 #-------------------(Function)-----------------------------------------------------------------------------
 #TODO backupZipFolder
 function backupZipFolder  {
 
     try {
 
-        $location = "C:\Backup\VSC-MMX\"
-
     If((Test-Path $global:main)-eq $false){
         Write-Host " "
-        Write-host "Creating folder with the name $folderName."
+        Write-host "Creating folder with the name $folderName at locatie $locatie."
         Write-host " "
-        New-Item -path $location -Name $folderName -ItemType Directory
+        New-Item -path $locatie -Name $folderName -ItemType Directory
         Start-Sleep 2
-        Write-LogLine "Folder $folderName created."
-        Write-Host ("`n" + "Folder $folderName created.")
+        Write-LogLine "Folder $folderName created at location $locatie."
+        Write-Host ("`n" + "Folder $folderName created at location $locatie.")
         Write-host " "
         # sleep timer for user to see outpute
         Start-sleep -Seconds 4
@@ -108,14 +107,13 @@ function backupZipFolder  {
 
         $msg = "STOP The application has caught an error"
             Write-LogLine " "
-            Write-LogLine "## DEBUG ## + `n"
+            Write-LogLine ("## DEBUG ##" + "`n")
             Write-LogLine ($msg + "`n")
             Write-LogLine $_.Exception.Message
             Write-Host "Open Log file to see Error message"
-            Write-LogLine (`n + "## DEBUG END ##")
+            Write-LogLine ("`n" + "## DEBUG END ##")
             Write-logoutput
             pause
-            $global:returncode = 1;
 
     }
 
@@ -136,14 +134,13 @@ function backupToFolder {
     } catch {
         $msg = "STOP The application has caught an error"
         Write-LogLine " "
-        Write-LogLine "## DEBUG ## + `n"
+        Write-LogLine ("## DEBUG ##" + "`n")
         Write-LogLine ($msg + "`n")
         Write-LogLine $_.Exception.Message
         Write-Host "Open Log file to see Error message"
-        Write-LogLine (`n + "## DEBUG END ##")
+        Write-LogLine ("`n" + "## DEBUG END ##")
         Write-logoutput
         pause
-        $global:returncode = 1;
     }
 }
 #TODO ZipFile
@@ -157,20 +154,19 @@ function zipFile{
     } catch {
         $msg = "STOP The application has caught an error"
             Write-LogLine " "
-            Write-LogLine "## DEBUG ## + `n"
+            Write-LogLine ("## DEBUG ##" + "`n")
             Write-LogLine ($msg + "`n")
             Write-LogLine $_.Exception.Message
             Write-Host "Open Log file to see Error message"
-            Write-LogLine (`n + "## DEBUG END ##")
+            Write-LogLine ("`n" + "## DEBUG END ##")
             Write-logoutput
             pause
-            $global:returncode = 1;
     }
 }
 
 #--------------------(Main)-----------------------------------------------------------------------------
-Set-logInit("Create a SQL backup zip _")
-Write-LogLine("$(get-date) Create a SQL Backup zip file ")
+Set-logInit("Create a SQL backup_")
+Write-LogLine("$(get-date) Create a SQL Backup")
 Write-Version $version
 Write-Version $space
 #--------------------------------------
@@ -183,4 +179,3 @@ backupToFolder
 pause
 
 Write-logoutput
-return  $global:returncode
