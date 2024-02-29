@@ -23,7 +23,7 @@ function set-LogLineHeader($string) {
 
 function Set-LogInit($Prefix) {
     $time = Get-Date -Format "dd-MM-yyyy HHmmss"
-    $logDir = New-Item -Path "C:\Logs\" -Name "Tools" -ItemType "directory" -Force
+    $logDir = New-Item -Path "C:\Log\" -Name "Tools" -ItemType "directory" -Force
     $logFileName = ($Prefix) + $time + ".log"
     $global:logFile = New-Item -Path $logDir -Name $logFileName -ItemType "file" 
     $global:logLines = New-Object System.Collections.ArrayList
@@ -62,17 +62,17 @@ function Write-LogOutput {
             Write-logoutput
     }
 #----------------[Version]-------------------------------------------------------------
-$version = "Version: 1.3.6"
+$version = "Version: 1.4.6"
 $space = "---------------------------------"
 #----------------[Pre text]-----------------------------------------------------------------------------
-Write-Host "##########################################################################"
-Write-Host "Welkom bij de SQL Backup Tool $version.                            #"                                 
-Write-Host "Met deze tool kan je gemakkelijk een SQL backup maken en exporteren.     #"
-Write-Host "Kies een bestaand Locatie path voor het exporteren  bijv C:\Temp\        #"
-Write-host "                                                                         #"
-Write-host "                       ##DEBUG##                                         #"
-Write-Host "BUG INFO: De zip functionaliteit functioneert nog niet!                  #"
-Write-Host "##########################################################################"
+Write-Host "                ##########################################################################"
+Write-Host "                # Welkom bij de SQL Backup Tool $version.                          #"                                
+Write-Host "                # Met deze tool kan je gemakkelijk een SQL backup maken en exporteren.   #"
+Write-Host "                # Kies een bestaand Locatie path voor het exporteren  bijv C:\Temp\      #"
+Write-host "                #                                                                        #"
+Write-host "                #                      ##DEBUG##                                         #"
+Write-Host "                # BUG INFO: De zip functionaliteit functioneert nog niet!                #"
+Write-Host "                ##########################################################################"
 Write-host "`n"
 #----------------[ Global Default ]---------------------------------------------------------------------------
 $global:returncode = 0 # VCB 0 = succes , 1 = failed
