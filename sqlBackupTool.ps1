@@ -1,32 +1,20 @@
 <#
 .SYNOPSIS
     Name: sqlBackupTool.ps1
-     
-.DESCRIPTION
-   The purpose of this script is to .
-  
+      
 .PARAMETER InitialDirectory
     This script can be run local filesystem at Workstation.
       
 .NOTES
     Updated: xx-xx-2021
     Release Date: 28-02-2024
-    Senior Author: Gertjan van Zon
-    Junior Author: Jordy Scheers
-    Copyright 2019 By Verkerk Service Systemen
-    All Rights Reserved
-    May not be reproduced or redistributed
-    Without written consent from Verkerk Service Systemen       
+    Author: Jordy Scheers     
 
 .NOTES
-    Debug codes
-    $01  = "Target found"
-    $02  = "Starting function"
-    $10  = "Creating Directory"  
-    $13  = "Execution failed"
-    $117 = "Execution completed"
-    $404 = "File or map not found"
-    $500 = "Unable to create item"  
+    ## DEBUG ##
+
+
+####################################
 
 .EXAMPLE 
     default 
