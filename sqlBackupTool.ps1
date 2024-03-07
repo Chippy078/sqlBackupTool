@@ -77,11 +77,13 @@ Write-host "`n"
 #----------------[ Global Default ]---------------------------------------------------------------------------
 $global:returncode = 0 # VCB 0 = succes , 1 = failed
 #----------------[ Global Vars ]---------------------------------------------------------------------------
+#TODO var
 $locatie = Read-Host "Locatie path"
 $folderName = Read-Host "Foldername"
 $fileName = Read-Host "Filename"
 $global:main = "$locatie\$folderName"
 $global:sqlBackup = "$locatie\$folderName\$fileName.bak"
+$global:zipPath = $locatie
 $global:zipMe = "$locatie\$folderName.zip"
 #-------------------(Function)-----------------------------------------------------------------------------
 #TODO backupZipFolder
@@ -113,10 +115,9 @@ function backupZipFolder  {
             Write-Host "Open Log file to see Error message"
             Write-LogLine ("`n" + "## DEBUG END ##")
             Write-logoutput
-            pause
+            #pause
 
     }
-
 }
 #TODO backupToFolder
 function backupToFolder {
@@ -140,17 +141,17 @@ function backupToFolder {
         Write-Host "Open Log file to see Error message"
         Write-LogLine ("`n" + "## DEBUG END ##")
         Write-logoutput
-        pause
+        #pause
     }
 }
 #TODO ZipFile
 function zipFile{
     try {
     Write-LogLine "Creating Zip File"
-    Write-Host "Creating Zip File"
-    Compress-Archive -Path $global:main  -DestinationPath $global:zipMe -Force
+    Write-Host "Creating Zip File called $folderName.zip"
+    Compress-Archive -Path $global:zipPath -DestinationPath $global:zipMe -CompressionLevel Fastest
     Write-LogLine "File ready for download."
-    Write-Host "File ready for download."
+    Write-Host "File ready for download at locatie $global:zipMe."
     } catch {
         $msg = "STOP The application has caught an error"
             Write-LogLine " "
@@ -160,7 +161,7 @@ function zipFile{
             Write-Host "Open Log file to see Error message"
             Write-LogLine ("`n" + "## DEBUG END ##")
             Write-logoutput
-            pause
+            #pause
     }
 }
 
@@ -174,8 +175,8 @@ Write-Version $space
 backupZipFolder
 start-sleep -Seconds 2
 backupToFolder
-#Start-Sleep -Seconds 2
-#zipFile
+Start-Sleep -Seconds 4
+zipFile
 pause
 
 Write-logoutput
